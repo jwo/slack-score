@@ -1,0 +1,6 @@
+```
+<% games.each do |game| %>
+ <%= game.keys.first.ljust(25)%> : <%= game[game.keys.first] %>
+ <%= game.keys.last.ljust(25) %> : <%= game[game.keys.last] %>
+<% end %>
+```
