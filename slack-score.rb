@@ -36,7 +36,7 @@ client.on :message do |data|
 
     rows = ['```']
     Sagarin.new.fetch.each_with_index do |team, index|
-      rows << team.ljust(40) + (index + 1).to_s
+      rows << team.ljust(30) + (index + 1).to_s
     end
     rows << '```'
 
@@ -48,7 +48,7 @@ client.on :message do |data|
     rows = ['```']
     Sagarin.new.fetch.each_with_index do |team, index|
       if team.downcase.include? the_team.downcase.strip
-        rows << team.ljust(40) + (index + 1).to_s
+        rows << team.ljust(30) + (index + 1).to_s
       end
     end
     rows << '```'
