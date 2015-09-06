@@ -3,6 +3,7 @@ Bundler.require
 Dotenv.load
 
 require './slack-score-api'
+require './sagarin'
 
 Slack.configure do |config|
   config.token = ENV['SLACK_API_TOKEN']
@@ -31,6 +32,27 @@ client.on :message do |data|
     client.message channel: data['channel'], text: scores
   when /^bot/ then
     client.message channel: data['channel'], text: "Sorry <@#{data['user']}>, what?"
+  when /full sagarin ratings/i then
+
+    rows = ['```']
+    Sagarin.new.fetch.each_with_index do |team, index|
+      rows << team.ljust(40) + (index + 1).to_s
+    end
+    rows << '```'
+
+    client.message channel: data['channel'], text: rows.join("\n")
+  when /^what sagarin is/i then
+
+    the_team = data['text'].gsub(/^what sagarin is/i, "")
+
+    rows = ['```']
+    Sagarin.new.fetch.each_with_index do |team, index|
+      if team.downcase.include? the_team.downcase.strip
+        rows << team.ljust(40) + (index + 1).to_s
+      end
+    end
+    rows << '```'
+    client.message channel: data['channel'], text: rows.join("\n")
   end
 end
 

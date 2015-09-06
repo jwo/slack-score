@@ -1,9 +1,5 @@
+require './sagarin'
 
-require 'bundler'
-Bundler.require
-Dotenv.load
-
-require './slack-score-api'
-scores = SlackScore.new.formatted
-
-puts scores
+Sagarin.new.fetch.each_with_index do |team, index|
+  puts team.ljust(40) + (index + 1).to_s
+end
