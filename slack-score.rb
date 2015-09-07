@@ -4,6 +4,7 @@ Dotenv.load
 
 require './slack-score-api'
 require './sagarin'
+require './bbq_bot'
 
 Slack.configure do |config|
   config.token = ENV['SLACK_API_TOKEN']
@@ -41,6 +42,7 @@ client.on :message do |data|
     rows << '```'
 
     client.message channel: data['channel'], text: rows.join("\n")
+
   when /^what sagarin is/i then
 
     the_team = data['text'].gsub(/^what sagarin is/i, "")
@@ -53,6 +55,10 @@ client.on :message do |data|
     end
     rows << '```'
     client.message channel: data['channel'], text: rows.join("\n")
+
+  when /bbqbot/ then
+    client.typing channel: data['channel']
+    client.message channel: data['channel'], text:  BbqBot.new.fetch.formatted
   end
 end
 
