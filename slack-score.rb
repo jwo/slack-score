@@ -56,7 +56,7 @@ client.on :message do |data|
     rows << '```'
     client.message channel: data['channel'], text: rows.join("\n")
 
-  when /bbqbot/ then
+  when /bbqbot/i then
     client.typing channel: data['channel']
     client.message channel: data['channel'], text:  BbqBot.new.fetch.formatted
   end
