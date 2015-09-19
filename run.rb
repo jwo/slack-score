@@ -1,4 +1,3 @@
-require './bbq_bot'
+require './insult'
 
-puts BbqBot.new.fetch.formatted
-
+puts Insult.new.fetch

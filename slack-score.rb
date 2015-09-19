@@ -5,6 +5,8 @@ Dotenv.load
 require './slack-score-api'
 require './sagarin'
 require './bbq_bot'
+require './insult'
+
 
 Slack.configure do |config|
   config.token = ENV['SLACK_API_TOKEN']
@@ -29,8 +31,14 @@ client.on :message do |data|
   when /score me/i then
 
     client.typing channel: data['channel']
-    scores = SlackScore.new.formatted
-    client.message channel: data['channel'], text: scores
+
+    if data['user'] == 'jmart'
+      client.message channel: data['channel'], text: Insult.new.fetch
+    else
+      scores = SlackScore.new.formatted
+      client.message channel: data['channel'], text: scores
+    end
+
   when /^bot/ then
     client.message channel: data['channel'], text: "Sorry <@#{data['user']}>, what?"
   when /full sagarin ratings/i then
