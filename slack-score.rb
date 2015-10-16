@@ -19,7 +19,6 @@ client.auth_test
 
 general_channel = client.channels_list['channels'].detect { |c| c['name'] == 'scorebot-test' }
 
-
 client = Slack::RealTime::Client.new
 
 client.on :hello do
@@ -27,13 +26,22 @@ client.on :hello do
 end
 
 client.on :message do |data|
+
+  username = client.users.find{|u| u["id"] == data['user']}["name"]
+
+  if username == "jmart" && [true, false, false, false, false].sample
+    client.message channel: data['channel'], text: "Hey @#{username}: #{Insult.new.fetch}"
+  end
+
   case data['text']
   when /score me/i then
 
     client.typing channel: data['channel']
 
-    if data['user'] == 'jmart'
-      client.message channel: data['channel'], text: Insult.new.fetch
+    username = client.users.find{|u| u["id"] == data['user']}["name"]
+
+    if username == "jmart"
+      client.message channel: data['channel'], text: "Hey @#{username}: #{Insult.new.fetch}"
     else
       scores = SlackScore.new.formatted
       client.message channel: data['channel'], text: scores
