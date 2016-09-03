@@ -29,10 +29,6 @@ client.on :message do |data|
 
   username = client.users.find{|u| u["id"] == data['user']}["name"]
 
-  if username == "jmart" && [true, false, false, false, false].sample
-    client.message channel: data['channel'], text: "Hey @#{username}: #{Insult.new.fetch}"
-  end
-
   case data['text']
   when /score me/i then
 
@@ -40,12 +36,8 @@ client.on :message do |data|
 
     username = client.users.find{|u| u["id"] == data['user']}["name"]
 
-    if username == "jmart"
-      client.message channel: data['channel'], text: "Hey @#{username}: #{Insult.new.fetch}"
-    else
-      scores = SlackScore.new.formatted
-      client.message channel: data['channel'], text: scores
-    end
+    scores = SlackScore.new.formatted
+    client.message channel: data['channel'], text: scores
 
   when /^bot/ then
     client.message channel: data['channel'], text: "Sorry <@#{data['user']}>, what?"
