@@ -1,3 +1,3 @@
-require './insult'
+require './slack-score-api'
 
-puts Insult.new.fetch
+puts SlackScore.new.formatted_rankings

@@ -1,9 +1,10 @@
 source "https://rubygems.org"
 
-ruby '2.2.2'
+ruby '2.3.0'
 gem 'slack-ruby-client'
 gem 'celluloid-eventsource'
 gem "http"
 gem "mechanize"
 gem "dotenv"
 gem "pry"
+gem "rb-readline"

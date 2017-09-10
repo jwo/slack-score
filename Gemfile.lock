@@ -95,6 +95,7 @@ GEM
       coderay (~> 1.1.0)
       method_source (~> 0.8.1)
       slop (~> 3.4)
+    rb-readline (0.5.3)
     rspec-logsplit (0.1.3)
     slack-ruby-client (0.3.0)
       eventmachine
@@ -121,4 +122,11 @@ DEPENDENCIES
   http
   mechanize
   pry
+  rb-readline
   slack-ruby-client
+
+RUBY VERSION
+   ruby 2.3.0p0
+
+BUNDLED WITH
+   1.13.6
