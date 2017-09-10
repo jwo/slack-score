@@ -36,7 +36,16 @@ client.on :message do |data|
 
     username = client.users.find{|u| u["id"] == data['user']}["name"]
 
-    scores = SlackScore.new.formatted
+    scores = SlackScore.new.formatted_matchups
+    client.message channel: data['channel'], text: scores
+
+  when /rankings/i then
+
+    client.typing channel: data['channel']
+
+    username = client.users.find{|u| u["id"] == data['user']}["name"]
+
+    scores = SlackScore.new.formatted_rankings
     client.message channel: data['channel'], text: scores
 
   when /^bot/ then
