@@ -9,7 +9,7 @@ require 'ostruct'
 
 class SlackScore
 
-  def formatted_matchup
+  def formatted_matchups
     games = matchups
     b = binding
     ERB.new(File.read("./scores.erb")).result(b)
