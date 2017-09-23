@@ -70,7 +70,6 @@ client.on :message do |data|
     the_team = data['text'].match(/([\w|\W]+) on tv/i).captures.first
     sched = Schedule.new.when?(the_team)
     client.message channel: data['channel'], text: sched
-  end
 
   when /^what sagarin is/i then
 
