@@ -60,6 +60,18 @@ client.on :message do |data|
 
     client.message channel: data['channel'], text: rows.join("\n")
 
+  when /when does ([\w|\W]+) play/i then
+    the_team = data['text'].match(/when does ([\w|\W]+) play/i).captures.first
+    sched = Schedule.new.when?(the_team)
+    client.message channel: data['channel'], text: sched
+  end
+
+  when /([\w|\W]+) on tv/i then
+    the_team = data['text'].match(/([\w|\W]+) on tv/i).captures.first
+    sched = Schedule.new.when?(the_team)
+    client.message channel: data['channel'], text: sched
+  end
+
   when /^what sagarin is/i then
 
     the_team = data['text'].gsub(/^what sagarin is/i, "")

@@ -21,6 +21,20 @@ class SlackScore
     ERB.new(File.read("./rankings.erb")).result(b)
   end
 
+  def live_scoring
+    {
+        "version": "1.5.0",
+        "device": "iOS",
+        "msgs": [{
+          "method": "getLiveScoringStats",
+          "msgId": "newView",
+          "data": {
+            "newView": true
+          }
+        }]
+      }
+  end
+
   def fetch
     payload = {"version"=>"2", "device"=>"iOS", "msgs"=>[{"method"=>"login", "msgId"=>"ID", "data"=>{"u"=>"#{ENV.fetch("USERNAME")}","p"=>"#{ENV.fetch("PASSWORD")}"}}]}
 
