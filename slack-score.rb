@@ -36,6 +36,7 @@ client.on :message do |data|
   when /scorebot help/ then
     help = """
       ```
+      Hey #{username}, here's what I can do!
         score me
         rankings
         full sagarin ratings
