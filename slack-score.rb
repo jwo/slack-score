@@ -31,6 +31,20 @@ client.on :message do |data|
   username = client.users.find{|u| u["id"] == data['user']}["name"]
 
   case data['text']
+  when username == 'scorebot' then
+
+  when /scorebot help/ then
+    help = """
+      ```
+        score me
+        rankings
+        full sagarin ratings
+        what sagarin is $team
+        when does $team play
+        $team on tv
+      ```
+    """
+    client.message channel: data['channel'], text: help
   when /score me/i then
 
     client.typing channel: data['channel']
