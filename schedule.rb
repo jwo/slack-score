@@ -9,28 +9,32 @@ class Schedule
       agent.user_agent_alias = 'Mac Safari'
     }
     a.get("http://www.fbschedules.com/college-football-schedule/") do |page|
-
-      matchups = []
 		
-      page.search(".year-bg").each do |title|
+      matchups =page
+        .search("td.matchup")
+        .select{|td| td.text =~ /#{team}/i }
+        .map(&:parent)
+        .map do |tr|
 
-        if Date.parse(title.text) <= 5.days.from_now
+          element = tr.parent.parent.parent
+          until element.attributes["class"].value  == "year-bg" do
+            element = element.previous_sibling
+          end
 
-          container = title.next_sibling
-          matchups += container
-            .search("td.matchup")
-            .select{|td| td.text =~ /#{team}/i }
-            .map(&:parent)
-            .map do |tr|
-              date = title.text
-              name = tr.search(".matchup").first.text
-              time = tr.search(".tv-time-td").first.text
-              channel = tr.search(".tv-online-td").first.text
+          date = element.text
+          name = tr.search(".matchup").first.text
+          time = tr.search(".tv-time-td").first.text
+          channel = tr.search(".tv-online-td").first.text
 
-              [date, name, time, channel]
-            end
+          [date, name, time, channel]
         end
-      end
+        .select do |matchup| 
+          date        = Date.parse(matchup[0]) 
+          start_date  = Date.today
+          end_date    = 6.days.from_now
+          (start_date..end_date).include? date
+        end
+
       b = binding
       return ERB.new(File.read("./schedule.erb")).result(b)
     end

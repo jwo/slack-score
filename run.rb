@@ -1,6 +1,6 @@
 require './slack-score-api'
 require './schedule'
 
-# puts SlackScore.new.formatted_rankings
+# puts SlackScore.new.schedule
 
-puts Schedule.new.when?("texas")
+puts Schedule.new.when?("Texas")
