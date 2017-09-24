@@ -1,0 +1,4 @@
+```<% players.group_by(&:date_time).each do |date, players| %>
+<%= date.strftime("%a %d %l:%M %p") %><% players.each do |player| %>
+  <%= "#{player.name} (#{player.position})".ljust(30)%> : <%= player.game.channel.gsub("/ Tickets", "").strip %> @ <%= player.game.time %><% end %><% end %>
+```

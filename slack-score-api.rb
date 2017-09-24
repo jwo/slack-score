@@ -6,6 +6,7 @@ require 'http'
 require 'erb'
 require 'pry'
 require 'ostruct'
+require './schedule'
 
 class SlackScore
 
@@ -19,6 +20,12 @@ class SlackScore
     teams = rankings.map{|g| OpenStruct.new(g)}
     b = binding
     ERB.new(File.read("./rankings.erb")).result(b)
+  end
+
+  def formatted_schedule
+    players = full_schedule
+    b = binding
+    ERB.new(File.read("./full_schedule.erb")).result(b)
   end
 
   def live_scoring
@@ -77,6 +84,22 @@ class SlackScore
       .first["COMBINED"]
   end
 
+  def team_map
+    {
+      "MisSt" => "Mississippi State",
+      "Ala" => "Alabama",
+      "Wash" => "Washington",
+      "WaSt" => "Washington State",
+      "Lou" => "Louisville",
+      "Tenn" => "Tennessee",
+      "VaTec" => "Virginia Tech",
+      "UCF" => "UCF",
+      "Duke" => "Duke",
+      "Clem" => "Clemson",
+      "WestMI" => "Western Michigan"
+    }
+  end
+
   def schedule
     data = fetch live_scoring
     team_id = data
@@ -86,19 +109,9 @@ class SlackScore
       .fetch("ownTeamIds")
       .first
 
-    players = data
-      .fetch("responses")
-      .first
-      .fetch("data")
-      .fetch("scorersPerTeam")
-      .fetch("ACTIVE")
-      .fetch(team_id)
-      .map{|player| [:id, :name, :team, :position].zip(player).to_h }
-      # .map do |player|
-
-      # end
-
-    
+ 
+ 
+   
     teams = data
       .fetch("responses")
       .first
@@ -125,6 +138,40 @@ class SlackScore
 
       end
 
+      players = data
+      .fetch("responses")
+      .first
+      .fetch("data")
+      .fetch("scorersPerTeam")
+      .fetch("ACTIVE")
+      .fetch(team_id)
+      .map{|player| [:id, :name, :team, :position].zip(player).to_h }
+      .map do |player|
+        team = teams.find{|team| team[:id] == player[:id]}
+        player[:matchup] = team[:name]
+        player[:team] = team_map.fetch(player[:team], player[:team])
+        player
+      end
+
+  end
+
+  def full_schedule
+    our_schedule = schedule
+    teams = our_schedule.map{|player| player[:team]}.uniq
+    games = Schedule.new.data(teams)
+    games = games.map do |game|
+      time = Time.parse(game.date + " " + game.time) rescue Time.now
+      game.date_time = time
+      game
+    end
+
+    our_schedule
+      .map do |player|
+        player[:game] = games.find{|g| g.teams.include? player[:team]} || OpenStruct.new(date: "UNKNOWN", game: "", channel: "")
+        player[:date_time] = player[:game].date_time
+        OpenStruct.new(player)
+      end
+      .sort{|a,b| a.date_time <=> b.date_time }
   end
 
   def matchups

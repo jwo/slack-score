@@ -1,4 +1,4 @@
-```<% matchups.group_by(&:first).each do |date, games| %>
-<%= date %><% games.each do |date, game, time, channel| %>
-  <%= game.ljust(45)%> : <%= channel %> @ <%= time %><% end %><% end %>
+```<% matchups.group_by(&:date).each do |date, games| %>
+<%= date %><% games.each do |game| %>
+  <%= game.game.ljust(45)%> : <%= game.channel %> @ <%= game.time %><% end %><% end %>
 ```
