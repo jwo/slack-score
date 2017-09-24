@@ -37,6 +37,7 @@ client.on :message do |data|
     help = """
       ```
       Hey #{username}, here's what I can do!
+        full schedule
         score me
         rankings
         full sagarin ratings
@@ -46,6 +47,16 @@ client.on :message do |data|
       ```
     """
     client.message channel: data['channel'], text: help
+  when /full schedule/i then
+
+    client.typing channel: data['channel']
+
+    username = client.users.find{|u| u["id"] == data['user']}["name"]
+    client.message channel: data['channel'], text: "...fetching..."
+
+    schedule = SlackScore.new.formatted_schedule
+    client.message channel: data['channel'], text: schedule
+
   when /score me/i then
 
     client.typing channel: data['channel']
