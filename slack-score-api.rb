@@ -171,6 +171,7 @@ class SlackScore
         player[:date_time] = player[:game].date_time
         OpenStruct.new(player)
       end
+      .select{|g| g.date_time }
       .sort{|a,b| a.date_time <=> b.date_time }
   end
 
