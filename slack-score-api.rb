@@ -176,10 +176,12 @@ class SlackScore
   end
 
   def matchups
-    table_data_with_weird_ids = fetch(detail_payload)
+    @data = fetch(detail_payload)
       .fetch("responses")
       .find{|j| j["msgId"].to_i == 2}
       .fetch("data")
+
+    table_data_with_weird_ids =  @data
       .fetch("matchups")
       .fetch("tableData")
     games = []
